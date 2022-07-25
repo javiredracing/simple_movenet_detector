@@ -22,8 +22,9 @@ async function renderResult() {
       alert(error);
     }
 	camera.drawCtx();
+    
 	if (poses && poses.length > 0){
-		//console.log(poses[0].keypoints);
+		console.log(poses[0].keypoints);
 		camera.drawResults(poses);
 	}
 }

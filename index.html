@@ -11,9 +11,20 @@
       position: relative;
       margin: 0;
     }
-    #canvas-wrapper
+    .canvas-wrapper,
+    canvas
     {
       position: relative;
+      width: 100% !important;
+      height:100% !important;
+    }
+    video {
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        visibility: hidden;
+        width: auto;
+        height: auto;
+        display: none;
     }
   </style>
 </head>
@@ -22,13 +33,7 @@
     <div class="container">
       <div class="canvas-wrapper">
         <canvas id="output"></canvas>
-        <video id="video" playsinline style="
-          -webkit-transform: scaleX(-1);
-          transform: scaleX(-1);
-          visibility: hidden;
-          width: auto;
-          height: auto;
-          ">
+        <video id="video" playsinline>
         </video>
       </div>
     </div>
