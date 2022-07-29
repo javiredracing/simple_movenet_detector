@@ -62,6 +62,8 @@ class Camera {
     this.video = document.getElementById('video');
     this.canvas = document.getElementById('output');
     this.ctx = this.canvas.getContext('2d');
+    this.img;
+    this.pointer;
   }
 
   /**
@@ -92,12 +94,16 @@ class Camera {
         }
       }
     };
+    
 
     const stream = await navigator.mediaDevices.getUserMedia(videoConfig);
 
     const camera = new Camera();
     camera.video.srcObject = stream;
-
+    camera.img = new Image();
+    camera.img.src = '/img/timthumb.jpeg';
+      camera.pointer = new Image();
+      camera.pointer.src = '/img/icon.png';
     await new Promise((resolve) => {
       camera.video.onloadedmetadata = () => {
         resolve(video);
@@ -124,6 +130,10 @@ class Camera {
     return camera;
   }
 
+    drawBackground(){
+        this.ctx.drawImage(this.img, 0, 0, this.video.videoWidth, this.video.videoHeight);
+    }
+
   drawCtx() {
     this.ctx.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
   }
@@ -142,16 +152,37 @@ class Camera {
     }
   }
 
+    
   /**
    * Draw the keypoints and skeleton on the video.
    * @param pose A pose with keypoints to render.
    */
-  drawResult(pose, model) {
+  drawResult(pose) {
     if (pose.keypoints != null) {
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);
     }
   }
+    
+    drawRightPointer(poses){
+        for (const pose of poses) {
+            if (pose.keypoints != null) {
+                var keypoint = pose.keypoints[10];    //right hand
+                const score = keypoint.score != null ? keypoint.score : 1;
+                const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
+                if (score >= scoreThreshold) {
+                    this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
+                }
+                
+                keypoint = pose.keypoints[9];    //right hand
+                
+                if (score >= scoreThreshold) {
+                    this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
+                }
+            break;
+            }
+        }
+    }
 
   /**
    * Draw the keypoints on the video.

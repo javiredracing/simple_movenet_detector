@@ -21,11 +21,13 @@ async function renderResult() {
       detector = null;
       alert(error);
     }
-	camera.drawCtx();
-    
+	//camera.drawCtx();
+    //camera.drawBackground();
+    camera.clearCtx();
 	if (poses && poses.length > 0){
 		console.log(poses[0].keypoints);
 		camera.drawResults(poses);
+        //camera.drawRightPointer(poses);
 	}
 }
 
