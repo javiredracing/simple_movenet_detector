@@ -1,7 +1,9 @@
 var detector, rafId, camera;
 var MODEL, MODEL_TYPE;
+var label = document.getElementById("coords");
 
 document.addEventListener("DOMContentLoaded", function(){
+    console.log(label)
 	MODEL = poseDetection.SupportedModels.MoveNet;
 	MODEL_TYPE = poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING;
 	app();
@@ -27,7 +29,12 @@ async function renderResult() {
 	if (poses && poses.length > 0){
 		console.log(poses[0].keypoints);
 		camera.drawResults(poses);
-        //camera.drawRightPointer(poses);
+        const coords = camera.drawRightPointer(poses);
+        if (typeof coords !== 'undefined'){
+            label.innerHTML = "x:" + coords.x + " y:" + coords.y;
+            //getCursorPosition();
+        }
+        //label.innerHTML("hola");
 	}
 }
 
@@ -43,6 +50,12 @@ async function app() {
 	renderPrediction();
 }
 
+function getCursorPosition(canvas, event) {
+    const rect = canvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    console.log("x: " + x + " y: " + y)
+}
 
 async function setBackendAndEnvFlags(flagConfig, backend) {
   if (flagConfig == null) {

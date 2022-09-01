@@ -120,19 +120,19 @@ class Camera {
 
     camera.canvas.width = videoWidth;
     camera.canvas.height = videoHeight;
-    const canvasContainer = document.querySelector('.canvas-wrapper');
-    canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`;
+    /*const canvasContainer = document.querySelector('.canvas-wrapper');
+    canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`;*/
 
     // Because the image from camera is mirrored, need to flip horizontally.
     camera.ctx.translate(camera.video.videoWidth, 0);
     camera.ctx.scale(-1, 1);
-
+     
     return camera;
   }
 
-    drawBackground(){
-        this.ctx.drawImage(this.img, 0, 0, this.video.videoWidth, this.video.videoHeight);
-    }
+  drawBackground(){
+    this.ctx.drawImage(this.img, 0, 0, this.video.videoWidth, this.video.videoHeight);
+  }
 
   drawCtx() {
     this.ctx.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
@@ -167,17 +167,13 @@ class Camera {
     drawRightPointer(poses){
         for (const pose of poses) {
             if (pose.keypoints != null) {
-                var keypoint = pose.keypoints[10];    //right hand
+                var keypoint = pose.keypoints[10];    //right hand -> 9 left hand
                 const score = keypoint.score != null ? keypoint.score : 1;
                 const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
                 if (score >= scoreThreshold) {
-                    this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
-                }
-                
-                keypoint = pose.keypoints[9];    //right hand
-                
-                if (score >= scoreThreshold) {
-                    this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
+                    //this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
+                    this.ctx.drawImage(this.pointer, keypoint.x - this.pointer.width / 2, keypoint.y - this.pointer.height/2, this.pointer.width ,this.pointer.height);
+                    return keypoint;
                 }
             break;
             }

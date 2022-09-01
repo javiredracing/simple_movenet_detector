@@ -6,47 +6,46 @@
   <style>
     body {
       margin: 0;
+      overflow: hidden;
+      
+      height:100vh;
+      width: 100%;
+      display:flex;
+      align-content: center;
     }
-    #main {
-      position: relative;
-      margin: 0;
-    }
-    .canvas-wrapper,.interface,
-    canvas
+    
+    .interface,canvas
     {
       position: absolute;
       top: 0;
       left: 0;
       width: 100% !important;
-      height:100% !important;
+      /*height:100% !important;*/
+      /*width: auto;*/
+      height: auto;
     }
     video {
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
         /*visibility: hidden;*/
         width: 100% !important;
-        height:100% !important;
-        /*width: auto;
+        /*height:100% !important;*/
+        /*width: auto;*/
         height: auto;
-        display: none;*/
+        /*display: none;*/
     }
   </style>
 </head>
 <body>
-  <div id="main">
-    <div class="container">
-        <video id="video" playsinline>
-        </video>
-        <div class="interface">
-            <button type="button">Esqueleto</button>
-            <button type="button">Click Me!</button>
-            <button type="button">Click Me!</button>
-        </div>
-      <div class="canvas-wrapper">
-        <canvas id="output"></canvas>
-      </div>
+    <video id="video" playsinline></video>
+    <div class="interface">
+        <button type="button">Esqueleto</button>
+        <button type="button">Click Me!</button>
+        <button type="button">Click Me!</button>
+        <label id="coords">COORDS</label>
+        <label id="pos">POSITION</label>
     </div>
-  </div>
+    <canvas id="output"></canvas>
 </body>
 
 <!-- Require the peer dependencies of pose-detection. -->
