@@ -6,7 +6,7 @@ const VIDEO_SIZE = {
   '360 X 270': {width: 360, height: 270}
 };
 const STATE = {
-  camera: {targetFPS: 60, sizeOption: '640 X 480'},
+  camera: {targetFPS: 60, sizeOption: '640 X 360'},
   backend: '',
   flags: {},
   modelConfig: {maxPoses: 1,
@@ -87,8 +87,8 @@ class Camera {
         facingMode: 'user',
         // Only setting the video to a specified size for large screen, on
         // mobile devices accept the default size.
-        width: isMobile() ? VIDEO_SIZE['360 X 270'].width : VIDEO_SIZE['640 X 480'].width,
-        height: isMobile() ? VIDEO_SIZE['360 X 270'].height : VIDEO_SIZE['640 X 480'].height,
+        width: isMobile() ? VIDEO_SIZE['360 X 270'].width : VIDEO_SIZE['640 X 360'].width,
+        height: isMobile() ? VIDEO_SIZE['360 X 270'].height : VIDEO_SIZE['640 X 360'].height,
         frameRate: {
           ideal: targetFPS,
         }

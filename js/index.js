@@ -1,9 +1,10 @@
 var detector, rafId, camera;
 var MODEL, MODEL_TYPE;
 var label = document.getElementById("coords");
+var label2 = document.getElementById("pos");
+const interfaz = document.getElementById("iface");
 
 document.addEventListener("DOMContentLoaded", function(){
-    console.log(label)
 	MODEL = poseDetection.SupportedModels.MoveNet;
 	MODEL_TYPE = poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING;
 	app();
@@ -27,14 +28,19 @@ async function renderResult() {
     //camera.drawBackground();
     camera.clearCtx();
 	if (poses && poses.length > 0){
-		console.log(poses[0].keypoints);
+		//console.log(poses[0].keypoints);
 		camera.drawResults(poses);
         const coords = camera.drawRightPointer(poses);
         if (typeof coords !== 'undefined'){
-            label.innerHTML = "x:" + coords.x + " y:" + coords.y;
-            //getCursorPosition();
+            label.innerHTML = "x:" + coords.x.toFixed(1) + " y:" + coords.y.toFixed(1);
+            
+            const coordScreen = toScreenCoords(coords.x, coords.y);
+            label2.innerHTML = "x:" + coordScreen.x.toFixed(1) + " y:" + coordScreen.x.toFixed(1);
+            /*let elem = iface.elementFromPoint(coordScreen.x.toFixed(), coordScreen.y.toFixed());
+            if (elem != null){
+                console.log(elem.tagName);
+            }*/
         }
-        //label.innerHTML("hola");
 	}
 }
 
@@ -50,12 +56,31 @@ async function app() {
 	renderPrediction();
 }
 
-function getCursorPosition(canvas, event) {
-    const rect = canvas.getBoundingClientRect()
+/*function getCursorPosition(event) {
+    const rect = camera.canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
     console.log("x: " + x + " y: " + y)
+}*/
+
+function toScreenCoords(x, y) {
+    //Cambiar coordenadas x,y mirror
+    let traslationX = camera.canvas.getBoundingClientRect().width / camera.canvas.width;
+    let traslationY = camera.canvas.getBoundingClientRect().height / camera.canvas.height;
+    let wx = (camera.canvas.width - x) * traslationX;
+    let wy = y * traslationY;
+    
+    return toPoint(wx, wy);
 }
+
+function toPoint(x, y) {
+  return { x: x, y: y }
+}
+
+/*function getScale(evt) {
+  scale = evt.target.value;
+  scaleDisplay.textContent = scale;
+}*/
 
 async function setBackendAndEnvFlags(flagConfig, backend) {
   if (flagConfig == null) {
