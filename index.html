@@ -22,6 +22,9 @@
       height: auto;
       
     }
+	.touchable{
+		
+	}
     video {
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
@@ -37,11 +40,11 @@
 <body>
     <video id="video" playsinline></video>
     <div id="iface" class="interface">
-        <button type="button">Esqueleto</button>
-        <button type="button">Click Me!</button>
-        <button type="button">Click Me!</button>
-        <label id="coords">COORDS</label>
-        <label id="pos">POSITION</label>
+        <button type="button" class="touchable">Esqueleto</button>
+        <button type="button" class="touchable">Click Me!</button>
+        <button type="button" class="touchable">Click Me!</button>
+        <label id="coords" class="touchable">Canvas</label>
+        <label id="pos" class="touchable">Interface</label>
     </div>
     <canvas id="output"></canvas>
 </body>

@@ -32,14 +32,22 @@ async function renderResult() {
 		camera.drawResults(poses);
         const coords = camera.drawRightPointer(poses);
         if (typeof coords !== 'undefined'){
-            label.innerHTML = "x:" + coords.x.toFixed(1) + " y:" + coords.y.toFixed(1);
+            label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
             
             const coordScreen = toScreenCoords(coords.x, coords.y);
-            label2.innerHTML = "x:" + coordScreen.x.toFixed(1) + " y:" + coordScreen.x.toFixed(1);
-            /*let elem = iface.elementFromPoint(coordScreen.x.toFixed(), coordScreen.y.toFixed());
-            if (elem != null){
-                console.log(elem.tagName);
-            }*/
+			let x = coordScreen.x.toFixed();
+			let y = coordScreen.y.toFixed();
+            label2.innerHTML = "x:" + x + " y:" + y;
+            let elems = document.elementsFromPoint(x, y);
+            if (elems != null){
+				for (const elem of elems){
+					if (elem.classList.contains("touchable")){
+						console.log(elem.tagName);
+						break;
+					}
+				}
+					//console.log(elem.tagName);
+            }
         }
 	}
 }
@@ -50,6 +58,9 @@ async function createDetector() {
 
 async function app() {
 	camera = await Camera.setupCamera(poseDetection, MODEL);
+	/*console.log(camera.canvas.getBoundingClientRect());
+	console.log(camera.video.getBoundingClientRect());
+	console.log(iface.getBoundingClientRect());*/
 	await setBackendAndEnvFlags(FLAGS, "tfjs-webgl");
 	detector = await createDetector();
 	//console.log(detector);
@@ -65,8 +76,9 @@ async function app() {
 
 function toScreenCoords(x, y) {
     //Cambiar coordenadas x,y mirror
-    let traslationX = camera.canvas.getBoundingClientRect().width / camera.canvas.width;
-    let traslationY = camera.canvas.getBoundingClientRect().height / camera.canvas.height;
+	let rect = camera.canvas.getBoundingClientRect();
+    let traslationX = rect.width / camera.canvas.width;
+    let traslationY = rect.height / camera.canvas.height;
     let wx = (camera.canvas.width - x) * traslationX;
     let wy = y * traslationY;
     
