@@ -1,10 +1,12 @@
 var detector, rafId, camera;
 var MODEL, MODEL_TYPE;
-var label = document.getElementById("coords");
-var label2 = document.getElementById("pos");
-const interfaz = document.getElementById("iface");
+var interfaz;
+var DRAW_SKELETON = true;
+var DRAW_RIGHT_HAND = true;
+var DRAW_BACKGROUND = true;
 
 document.addEventListener("DOMContentLoaded", function(){
+	interfaz = new Interface();
 	MODEL = poseDetection.SupportedModels.MoveNet;
 	MODEL_TYPE = poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING;
 	app();
@@ -25,30 +27,23 @@ async function renderResult() {
       alert(error);
     }
 	//camera.drawCtx();
-    //camera.drawBackground();
+	//if (!DRAW_BACKGROUND)
+		//camera.drawBackground();
+		//hide camera background
     camera.clearCtx();
 	if (poses && poses.length > 0){
 		//console.log(poses[0].keypoints);
-		camera.drawResults(poses);
-        const coords = camera.drawRightPointer(poses);
-        if (typeof coords !== 'undefined'){
-            label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
-            
-            const coordScreen = toScreenCoords(coords.x, coords.y);
-			let x = coordScreen.x.toFixed();
-			let y = coordScreen.y.toFixed();
-            label2.innerHTML = "x:" + x + " y:" + y;
-            let elems = document.elementsFromPoint(x, y);
-            if (elems != null){
-				for (const elem of elems){
-					if (elem.classList.contains("touchable")){
-						console.log(elem.tagName);
-						break;
-					}
-				}
-					//console.log(elem.tagName);
-            }
-        }
+		if (DRAW_SKELETON)
+			camera.drawResults(poses);
+		let coords = camera.drawRightPointer(poses, DRAW_RIGHT_HAND);
+		
+		if (typeof coords !== 'undefined'){
+			interfaz.setLabel(interfaz.label, coords);
+			let screenCoods = toScreenCoords(coords.x, coords.y); 
+			interfaz.manageCoords(screenCoods);
+		}else{
+			interfaz.noCoords();
+		}
 	}
 }
 
@@ -67,19 +62,11 @@ async function app() {
 	renderPrediction();
 }
 
-/*function getCursorPosition(event) {
-    const rect = camera.canvas.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
-    console.log("x: " + x + " y: " + y)
-}*/
-
 function toScreenCoords(x, y) {
-    //Cambiar coordenadas x,y mirror
 	let rect = camera.canvas.getBoundingClientRect();
     let traslationX = rect.width / camera.canvas.width;
     let traslationY = rect.height / camera.canvas.height;
-    let wx = (camera.canvas.width - x) * traslationX;
+    let wx = (camera.canvas.width - x) * traslationX;  //Cambiar coordenadas x,y mirror
     let wy = y * traslationY;
     
     return toPoint(wx, wy);
@@ -88,11 +75,6 @@ function toScreenCoords(x, y) {
 function toPoint(x, y) {
   return { x: x, y: y }
 }
-
-/*function getScale(evt) {
-  scale = evt.target.value;
-  scaleDisplay.textContent = scale;
-}*/
 
 async function setBackendAndEnvFlags(flagConfig, backend) {
   if (flagConfig == null) {

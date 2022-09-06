@@ -102,8 +102,8 @@ class Camera {
     camera.video.srcObject = stream;
     camera.img = new Image();
     camera.img.src = '/img/timthumb.jpeg';
-      camera.pointer = new Image();
-      camera.pointer.src = '/img/icon.png';
+    camera.pointer = new Image();
+    camera.pointer.src = '/img/icon.png';
     await new Promise((resolve) => {
       camera.video.onloadedmetadata = () => {
         resolve(video);
@@ -164,7 +164,7 @@ class Camera {
     }
   }
     
-    drawRightPointer(poses){
+    drawRightPointer(poses,isDraw){
         for (const pose of poses) {
             if (pose.keypoints != null) {
                 var keypoint = pose.keypoints[10];    //right hand -> 9 left hand
@@ -172,13 +172,15 @@ class Camera {
                 const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
                 if (score >= scoreThreshold) {
                     //this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
-                    this.ctx.drawImage(this.pointer, keypoint.x - this.pointer.width / 2, keypoint.y - this.pointer.height/2, this.pointer.width ,this.pointer.height);
+					if (isDraw)
+						this.ctx.drawImage(this.pointer, keypoint.x - this.pointer.width / 2, keypoint.y - this.pointer.height/2, this.pointer.width ,this.pointer.height);
                     return keypoint;
                 }
             break;
             }
         }
     }
+	
 
   /**
    * Draw the keypoints on the video.
