@@ -130,6 +130,13 @@ class Camera {
     return camera;
   }
 
+    toggleVideo(){
+        if (!this.video.classList.contains("invisible"))
+            this.video.classList.add("invisible");
+        else
+            this.video.classList.remove("invisible");
+    }
+
   drawBackground(){
     this.ctx.drawImage(this.img, 0, 0, this.video.videoWidth, this.video.videoHeight);
   }
@@ -164,23 +171,29 @@ class Camera {
     }
   }
     
-    drawRightPointer(poses,isDraw){
+    drawHandsPointer(poses,isDraw){
+        var handPoints = [];
         for (const pose of poses) {
             if (pose.keypoints != null) {
-                var keypoint = pose.keypoints[10];    //right hand -> 9 left hand
-                const score = keypoint.score != null ? keypoint.score : 1;
-                const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
-                if (score >= scoreThreshold) {
-                    //this.ctx.drawImage(this.pointer, keypoint.x, keypoint.y, this.pointer.width, this.pointer.height);
-					if (isDraw)
-						this.ctx.drawImage(this.pointer, keypoint.x - this.pointer.width / 2, keypoint.y - this.pointer.height/2, this.pointer.width ,this.pointer.height);
-                    return keypoint;
-                }
+                let point = this.drawPointer(pose.keypoints[9], this.pointer, isDraw);
+                handPoints.push(point);
+                let point2 = this.drawPointer(pose.keypoints[10], this.pointer, isDraw);
+                handPoints.push(point2);
             break;
             }
         }
+        return handPoints;
     }
 	
+    drawPointer(keypoint, icon, isDraw){
+        const score = keypoint.score != null ? keypoint.score : 1;
+        const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
+        if (score >= scoreThreshold) {
+            if (isDraw)
+                this.ctx.drawImage(icon, keypoint.x - this.pointer.width / 2, keypoint.y - this.pointer.height/2, this.pointer.width ,this.pointer.height);
+            return keypoint;
+        }
+    }
 
   /**
    * Draw the keypoints on the video.

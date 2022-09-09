@@ -9,6 +9,8 @@
       overflow: hidden;
       height:100vh;
       width: 100%;
+      background-color:red;
+      pointer-events:none;
     }
     
     .interface,canvas
@@ -20,8 +22,11 @@
       /*height:100% !important;*/
       /*width: auto;*/
       height: auto;
-      
     }
+    .interface{
+        padding:50px;
+    }
+   
 	.touchable{
 	  border: 2px solid black;
 	  background-color: white;
@@ -29,11 +34,15 @@
 	  padding: 14px 28px;
 	  font-size: 16px;
 	  cursor: pointer;
+      pointer-events:auto;
 	}
 	.hover{
 	  background-color: #04AA6D;
 	  color: white;
 	}
+    .invisible{
+        visibility: hidden;
+    }
     video {
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
@@ -41,8 +50,7 @@
         width: 100% !important;
         /*height:100% !important;*/
         /*width: auto;*/
-        height: auto;
-        /*display: none;*/
+        height: auto;/
     }
   </style>
 </head>

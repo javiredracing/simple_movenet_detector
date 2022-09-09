@@ -2,7 +2,7 @@ var detector, rafId, camera;
 var MODEL, MODEL_TYPE;
 var interfaz;
 var DRAW_SKELETON = true;
-var DRAW_RIGHT_HAND = true;
+var DRAW_HANDS = true;
 var DRAW_BACKGROUND = true;
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -35,15 +35,19 @@ async function renderResult() {
 		//console.log(poses[0].keypoints);
 		if (DRAW_SKELETON)
 			camera.drawResults(poses);
-		let coords = camera.drawRightPointer(poses, DRAW_RIGHT_HAND);
-		
-		if (typeof coords !== 'undefined'){
-			interfaz.setLabel(interfaz.label, coords);
-			let screenCoods = toScreenCoords(coords.x, coords.y); 
-			interfaz.manageCoords(screenCoods);
-		}else{
-			interfaz.noCoords();
-		}
+		var coords = camera.drawHandsPointer(poses, DRAW_HANDS);
+        var screenCoords = [];
+        for (const coord of coords){
+            if (typeof coord !== 'undefined'){
+                //interfaz.setLabel(interfaz.label, coords);
+                let screenCoord = toScreenCoords(coord);
+                screenCoords.push(screenCoord);
+            }
+        }
+        if (screenCoords.length > 0)
+            interfaz.manageCoords(screenCoords);
+        else
+            interfaz.noCoords();
 	}
 }
 
@@ -62,18 +66,18 @@ async function app() {
 	renderPrediction();
 }
 
-function toScreenCoords(x, y) {
+function toScreenCoords(coord) {
 	let rect = camera.canvas.getBoundingClientRect();
     let traslationX = rect.width / camera.canvas.width;
     let traslationY = rect.height / camera.canvas.height;
-    let wx = (camera.canvas.width - x) * traslationX;  //Cambiar coordenadas x,y mirror
-    let wy = y * traslationY;
+    let wx = (camera.canvas.width - coord.x) * traslationX;  //Cambiar coordenadas x,y mirror
+    let wy = coord.y * traslationY;
     
-    return toPoint(wx, wy);
+    return toPoint(wx, wy, coord.name);
 }
 
-function toPoint(x, y) {
-  return { x: x, y: y }
+function toPoint(x, y, name) {
+  return { x: x, y: y, name: name }
 }
 
 async function setBackendAndEnvFlags(flagConfig, backend) {
