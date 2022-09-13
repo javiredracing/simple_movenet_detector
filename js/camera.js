@@ -30,7 +30,7 @@ function isiOS() {
 
 // These anchor points allow the pose pointcloud to resize according to its
 // position in the input.
-const ANCHOR_POINTS = [[0, 0, 0], [0, 1, 0], [-1, 0, 0], [-1, -1, 0]];
+//const ANCHOR_POINTS = [[0, 0, 0], [0, 1, 0], [-1, 0, 0], [-1, -1, 0]];
 
 // #ffffff - White
 // #800000 - Maroon
