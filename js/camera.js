@@ -70,7 +70,7 @@ class Camera {
    * Initiate a Camera instance and wait for the camera stream to be ready.
    */
   static async setupCamera(posedetection, model) {
-	  console.log(posedetection);
+	  //console.log(posedetection);
 	  poseDect = posedetection;
 	  MODEL1 = model;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -94,7 +94,6 @@ class Camera {
         }
       }
     };
-    
 
     const stream = await navigator.mediaDevices.getUserMedia(videoConfig);
 
@@ -126,7 +125,7 @@ class Camera {
     // Because the image from camera is mirrored, need to flip horizontally.
     camera.ctx.translate(camera.video.videoWidth, 0);
     camera.ctx.scale(-1, 1);
-     
+
     return camera;
   }
 
@@ -159,7 +158,7 @@ class Camera {
     }
   }
 
-    
+
   /**
    * Draw the keypoints and skeleton on the video.
    * @param pose A pose with keypoints to render.
@@ -170,7 +169,7 @@ class Camera {
       this.drawSkeleton(pose.keypoints, pose.id);
     }
   }
-    
+
     drawHandsPointer(poses,isDraw){
         var handPoints = [];
         for (const pose of poses) {
@@ -184,7 +183,7 @@ class Camera {
         }
         return handPoints;
     }
-	
+
     drawPointer(keypoint, icon, isDraw){
         const score = keypoint.score != null ? keypoint.score : 1;
         const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;

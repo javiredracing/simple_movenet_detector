@@ -44,6 +44,7 @@ async function renderResult() {
                 screenCoords.push(screenCoord);
             }
         }
+			
         if (screenCoords.length > 0)
             interfaz.manageCoords(screenCoords);
         else
@@ -72,7 +73,7 @@ function toScreenCoords(coord) {
     let traslationY = rect.height / camera.canvas.height;
     let wx = (camera.canvas.width - coord.x) * traslationX;  //Cambiar coordenadas x,y mirror
     let wy = coord.y * traslationY;
-    
+
     return toPoint(wx, wy, coord.name);
 }
 

@@ -2,26 +2,10 @@ const CLICK_TIME = 1500;
 
 class Interface {
 	constructor() {
-		this.iface = document.getElementById('iface');
-		this.lastItem = "";
-		this.timestamp = 0;
-        this.lastItems = [/*{"label":"","timestamp":0}, {"label":"","timestamp":0}*/];
-		this.label = document.getElementById("coords");
-		this.label2 = document.getElementById("pos");
-		this.button1 = document.getElementById("btSkeleton");
-		this.button1.addEventListener("click", () => {
-		  DRAW_SKELETON = !DRAW_SKELETON;
-		});
-		this.button2 = document.getElementById("btCursor");
-		this.button2.addEventListener("click", () => {
-		  DRAW_HANDS = !DRAW_HANDS;
-		});
-		this.button3 = document.getElementById("btBackground");
-		this.button3.addEventListener("click", () => {
-            camera.toggleVideo();
-		});	
+	  this.lastItems = [/*{"label":"","timestamp":0}, {"label":"","timestamp":0}*/];
+		this.currentView = new MainView();
 	}
-	
+
 	manageCoords(coords){
         var itemTouched = [];
         for (const coord of coords){
@@ -34,8 +18,10 @@ class Interface {
                         break;
                     }
                 }
-                if (!finded)
+                if (!finded){
+										elem.name= coord.name;
                     itemTouched.push(elem);
+								}
             }
         }
         if (itemTouched.length > 0){
@@ -44,12 +30,14 @@ class Interface {
         }else{
             this.noCoords();
         }
+				this.currentView.validate(this.lastItems);
 	}
-	
+
 	setLabel(label, coords){
 		label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
 	}
-	
+
+
 	manageHover(items){
         for (var lastItem of this.lastItems){
             var found = false;
@@ -60,11 +48,13 @@ class Interface {
                 }
             }
             if (!found){
-                lastItem.label.classList.remove("hover");
+                //lastItem.label.classList.remove("hover");
+								this.currentView.dismissInteraction(lastItem.label);
+
             }
         }
 	}
-    
+
     updateLastItemsList(itemTouched){
         var newItems = [];
         for (var item of itemTouched){
@@ -73,29 +63,31 @@ class Interface {
                 if (lastItem.label.id == item.id){
                     found = true;
                     newItems.push(lastItem);
-                    this.validateItem(lastItem);
+                    //this.validateItem(lastItem);
                     break;
                 }
             }
             if (!found){
-                newItems.push({"label":item, timestamp:Date.now()})
-                item.classList.add("hover");
+                newItems.push({"label":item, timestamp:Date.now(),name:"hola"})
+                //item.classList.add("hover");
+								this.currentView.iteration(item);
             }
         }
         this.lastItems = newItems;
     }
-    
-    validateItem(lastItem){
+
+    /*validateItem(lastItem){
         let dateNow = Date.now();
         if ((dateNow - lastItem.timestamp) > CLICK_TIME){
             lastItem.label.dispatchEvent(new Event("click"));
             lastItem.timestamp = dateNow;
         }
-    }
-	
+				document.dispatchEvent(resultOK);
+    }*/
+
 	noCoords(){
-        for (var item of this.lastItems){
-			item.label.classList.remove("hover");
+      for (var item of this.lastItems){
+					this.currentView.dismissInteraction(item.label);
 		}
         this.lastItems = [];
 		/*this.label.innerHTML = "x: -  y: -";
