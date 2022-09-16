@@ -1,6 +1,7 @@
 class MainView {
+	//this.bodyParts = [9,10];
 	constructor() {
-		this.lastItems = [/*{"label":"","timestamp":0}, {"label":"","timestamp":0}*/];
+		//this.lastItems = [/*{"label":"","timestamp":0}, {"label":"","timestamp":0}*/];
 		this.label = document.getElementById("coords");
 		this.label2 = document.getElementById("pos");
 		this.button1 = document.getElementById("btSkeleton");
@@ -27,6 +28,8 @@ class MainView {
 		for (var lastItem of listOfItems){
 			let dateNow = Date.now();
 			if ((dateNow - lastItem.timestamp) > CLICK_TIME){
+					console.log(lastItem.label.bodyname);
+					console.log(lastItem.label.pose);
 					lastItem.label.dispatchEvent(new Event("click"));
 					lastItem.timestamp = dateNow;
 			}

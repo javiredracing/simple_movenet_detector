@@ -36,19 +36,28 @@ async function renderResult() {
 		if (DRAW_SKELETON)
 			camera.drawResults(poses);
 		var coords = camera.drawHandsPointer(poses, DRAW_HANDS);
-        var screenCoords = [];
-        for (const coord of coords){
-            if (typeof coord !== 'undefined'){
-                //interfaz.setLabel(interfaz.label, coords);
-                let screenCoord = toScreenCoords(coord);
-                screenCoords.push(screenCoord);
-            }
-        }
-			
-        if (screenCoords.length > 0)
-            interfaz.manageCoords(screenCoords);
-        else
-            interfaz.noCoords();
+		var allPoses = [];
+		for (var pose of poses) {
+			if (pose.keypoints != null) {
+	        var screenCoords = [];
+	        for (const keypoint of pose.keypoints){
+	            if (typeof keypoint !== 'undefined'){
+								const score = keypoint.score != null ? keypoint.score : 1;
+				        const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
+				        if (score >= scoreThreshold) {
+	                var screenCoord = toScreenCoords(keypoint);
+									screenCoord.name = keypoint.name;
+	                screenCoords.push(screenCoord);
+								}
+	            }
+	        }
+					allPoses.push(screenCoords);
+			}
+			if (allPoses.length > 0)
+					interfaz.manageCoords(allPoses);
+			else
+					interfaz.noCoords();
+		}
 	}
 }
 
@@ -74,11 +83,11 @@ function toScreenCoords(coord) {
     let wx = (camera.canvas.width - coord.x) * traslationX;  //Cambiar coordenadas x,y mirror
     let wy = coord.y * traslationY;
 
-    return toPoint(wx, wy, coord.name);
+    return toPoint(wx, wy);
 }
 
 function toPoint(x, y, name) {
-  return { x: x, y: y, name: name }
+  return { x: x, y: y }
 }
 
 async function setBackendAndEnvFlags(flagConfig, backend) {
