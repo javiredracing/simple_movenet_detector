@@ -129,12 +129,12 @@ class Camera {
     return camera;
   }
 
-    toggleVideo(){
-        if (!this.video.classList.contains("invisible"))
-            this.video.classList.add("invisible");
-        else
-            this.video.classList.remove("invisible");
-    }
+	toggleVideo(){
+		if (!this.video.classList.contains("invisible"))
+			this.video.classList.add("invisible");
+		else
+			this.video.classList.remove("invisible");
+	}
 
   drawBackground(){
     this.ctx.drawImage(this.img, 0, 0, this.video.videoWidth, this.video.videoHeight);
