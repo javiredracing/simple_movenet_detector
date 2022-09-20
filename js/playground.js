@@ -1,11 +1,12 @@
 class PlayGround {
-	constructor() {
+	constructor(params = {}) {
+		this.bodyParts = []; //left hand and right hand
+		this.params = params;
+		this.topParent = document.createElement('div');
+		this.topParent.className = "interface padding";
 		//Carga estatica
-		//animacion
-		//
   }
 	iteration(item){
-		//
 		item.classList.add("hover");
 	}
 	dismissInteraction(item){

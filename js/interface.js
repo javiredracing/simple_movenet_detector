@@ -4,6 +4,7 @@ class Interface {
 	constructor() {
 	  this.interfaceDiv = document.getElementById("iface");
 	  this.lastItems = [];
+	  this.stackViews = [];
 	  this.currentView = new MainView();
 	}
 
@@ -52,10 +53,34 @@ class Interface {
 		label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
 	}
 	
-	changeView(newView){
-		//if (typeof this.lastView === "undefined"){}
-		if (this.currentView.constructor.name != newView.constructor.name){
-			
+	pushView(newView, animated = false){
+		if (this.stackViews.length == 0){
+			this.interfaceDiv.appendChild(newView.topParent);
+			this.stackViews.push(newView.constructor.name);
+			this.currentView = newView;
+		}else{
+			if (this.stackViews[this.stackViews.length - 1] !== this.currentView.constructor.name){
+				this.interfaceDiv.appendChild(newView.topParent);
+				if (animated){
+					//Start transition from newView to this.currentView
+				}
+				//when finished transition, remove old class class and nodes (this.currentView.topParent)
+				this.stackViews.push(newView.constructor.name);
+				this.currentView = newView;
+			}
+		}
+	}
+	
+	popView(animated = false, params = {}){
+		if (this.stackViews.length > 0){
+			let className = this.stackViews.pop();
+			var newView = new classMap[className](params);
+			this.interfaceDiv.appendChild(newView.topParent);
+			if (animated){
+				//Start transition from this.currentViewnewView to newView 
+			}
+			//when finished transition, remove old class class and nodes (this.currentView.topParent)
+			this.currentView = newView;
 		}
 	}
 	
@@ -71,7 +96,6 @@ class Interface {
 		}
 		return "";
 	}
-	
 	
 	toScreenCoords(coord) {
 		let rect = camera.canvas.getBoundingClientRect();

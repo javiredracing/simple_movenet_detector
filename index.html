@@ -37,7 +37,7 @@
 	  padding: 14px 28px;
 	  font-size: 16px;
 	  cursor: pointer;
-    pointer-events:auto;
+	  pointer-events:auto;
 	}
 	.hover{
 	  background-color: #04AA6D;
@@ -60,14 +60,15 @@
 <body>
     <video id="video" playsinline></video>
     <div id="iface" class="interface">
+	<!--
       <div id="main" class="interface padding">
         <button id="btSkeleton" type="button" class="touchable">Esqueleto</button>
         <button id="btCursor" type="button" class="touchable">Cursor</button>
-        <button id="btBackground" type="button" class="touchable">Fondo</button>
+        <button id="btBackground" type="button" class="touchable">Fondo</button>-->
         <!--<label id="coords">Canvas</label>
         <label id="pos">Interface</label>-->
-      </div>
-
+     <!-- </div>
+	-->
     </div>
     <canvas id="output"></canvas>
 </body>
@@ -80,6 +81,7 @@
 <!-- Alternatively you can use the WASM backend: <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
 <script src="js/camera.js"></script>
+<script src="js/playground.js"></script>
 <script src="js/mainView.js"></script>
 <script src="js/interface.js"></script>
 <script src="js/index.js"></script>

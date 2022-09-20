@@ -130,10 +130,13 @@ class Camera {
   }
 
 	toggleVideo(){
-		if (!this.video.classList.contains("invisible"))
+		if (!this.video.classList.contains("invisible")){
 			this.video.classList.add("invisible");
-		else
+			return false;
+		}else{
 			this.video.classList.remove("invisible");
+			return true;
+		}
 	}
 
   drawBackground(){
@@ -171,17 +174,13 @@ class Camera {
   }
 
     drawHandsPointer(poses,isDraw){
-        //var handPoints = [];
         for (const pose of poses) {
             if (pose.keypoints != null) {
-                /*let point = */this.drawPointer(pose.keypoints[9], this.pointer, isDraw);
-                //handPoints.push(point);
-                /*let point2 = */this.drawPointer(pose.keypoints[10], this.pointer, isDraw);
-                //handPoints.push(point2);
+				this.drawPointer(pose.keypoints[9], this.pointer, isDraw);
+				this.drawPointer(pose.keypoints[10], this.pointer, isDraw);
             //break;
             }
         }
-        //return handPoints;
     }
 
     drawPointer(keypoint, icon, isDraw){
