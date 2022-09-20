@@ -3,7 +3,7 @@ var MODEL, MODEL_TYPE;
 var interfaz;
 var DRAW_SKELETON = true;
 var DRAW_HANDS = true;
-var DRAW_BACKGROUND = true;
+//var DRAW_BACKGROUND = true;
 const classMap = {	//new classMap["MainView"]();
     "MainView": MainView,
     "PlayGround": PlayGround
@@ -11,8 +11,7 @@ const classMap = {	//new classMap["MainView"]();
 
 document.addEventListener("DOMContentLoaded", function(){
 	interfaz = new Interface();
-	var mainView = new MainView();
-	interfaz.pushView(mainView);
+	interfaz.pushView("MainView");
 	MODEL = poseDetection.SupportedModels.MoveNet;
 	MODEL_TYPE = poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING;
 	app();

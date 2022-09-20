@@ -39,9 +39,9 @@ class MainView {
 		btn3.innerHTML = "Fondo ON";
 		btn3.addEventListener("click", () => {
 			if (camera.toggleVideo())
-				btn3.innerHTML = "Background ON";
+				btn3.innerHTML = "Fondo ON";
 			else
-				btn3.innerHTML = "Background OFF";
+				btn3.innerHTML = "Fondo OFF";
 		});
 		this.topParent.appendChild(btn3);
 	}

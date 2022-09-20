@@ -53,19 +53,21 @@ class Interface {
 		label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
 	}
 	
-	pushView(newView, animated = false){
+	pushView(className, animated = false, params = {}){
 		if (this.stackViews.length == 0){
+			var newView = new classMap[className](params);
 			this.interfaceDiv.appendChild(newView.topParent);
-			this.stackViews.push(newView.constructor.name);
+			this.stackViews.push(className);
 			this.currentView = newView;
 		}else{
-			if (this.stackViews[this.stackViews.length - 1] !== this.currentView.constructor.name){
+			if (this.stackViews[this.stackViews.length - 1] !== className){
+				var newView = new classMap[className](params);
 				this.interfaceDiv.appendChild(newView.topParent);
 				if (animated){
 					//Start transition from newView to this.currentView
 				}
 				//when finished transition, remove old class class and nodes (this.currentView.topParent)
-				this.stackViews.push(newView.constructor.name);
+				this.stackViews.push(className);
 				this.currentView = newView;
 			}
 		}
