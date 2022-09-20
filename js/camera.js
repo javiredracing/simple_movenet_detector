@@ -171,17 +171,17 @@ class Camera {
   }
 
     drawHandsPointer(poses,isDraw){
-        var handPoints = [];
+        //var handPoints = [];
         for (const pose of poses) {
             if (pose.keypoints != null) {
-                let point = this.drawPointer(pose.keypoints[9], this.pointer, isDraw);
-                handPoints.push(point);
-                let point2 = this.drawPointer(pose.keypoints[10], this.pointer, isDraw);
-                handPoints.push(point2);
-            break;
+                /*let point = */this.drawPointer(pose.keypoints[9], this.pointer, isDraw);
+                //handPoints.push(point);
+                /*let point2 = */this.drawPointer(pose.keypoints[10], this.pointer, isDraw);
+                //handPoints.push(point2);
+            //break;
             }
         }
-        return handPoints;
+        //return handPoints;
     }
 
     drawPointer(keypoint, icon, isDraw){

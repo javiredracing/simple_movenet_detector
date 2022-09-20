@@ -18,7 +18,7 @@ async function renderPrediction() {
 }
 
 async function renderResult() {
-	var poses;
+	let poses;
 	try {
       poses = await detector.estimatePoses(camera.video,{maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false});
     } catch (error) {
@@ -26,39 +26,15 @@ async function renderResult() {
       detector = null;
       alert(error);
     }
-	//camera.drawCtx();
-	//if (!DRAW_BACKGROUND)
-		//camera.drawBackground();
-		//hide camera background
     camera.clearCtx();
 	if (poses && poses.length > 0){
 		//console.log(poses[0].keypoints);
 		if (DRAW_SKELETON)
 			camera.drawResults(poses);
-		var coords = camera.drawHandsPointer(poses, DRAW_HANDS);
-		var allPoses = [];
-		for (var pose of poses) {
-			if (pose.keypoints != null) {
-	        var screenCoords = [];
-	        for (const keypoint of pose.keypoints){
-	            if (typeof keypoint !== 'undefined'){
-								const score = keypoint.score != null ? keypoint.score : 1;
-				        const scoreThreshold = STATE.modelConfig.scoreThreshold || 0;
-				        if (score >= scoreThreshold) {
-	                var screenCoord = toScreenCoords(keypoint);
-									screenCoord.name = keypoint.name;
-	                screenCoords.push(screenCoord);
-								}
-	            }
-	        }
-					allPoses.push(screenCoords);
-			}
-			if (allPoses.length > 0)
-					interfaz.manageCoords(allPoses);
-			else
-					interfaz.noCoords();
-		}
-	}
+		camera.drawHandsPointer(poses, DRAW_HANDS);
+		interfaz.manageCoords(poses);
+	}else
+		interfaz.noCoords();
 }
 
 async function createDetector() {
@@ -74,20 +50,6 @@ async function app() {
 	detector = await createDetector();
 	//console.log(detector);
 	renderPrediction();
-}
-
-function toScreenCoords(coord) {
-	let rect = camera.canvas.getBoundingClientRect();
-    let traslationX = rect.width / camera.canvas.width;
-    let traslationY = rect.height / camera.canvas.height;
-    let wx = (camera.canvas.width - coord.x) * traslationX;  //Cambiar coordenadas x,y mirror
-    let wy = coord.y * traslationY;
-
-    return toPoint(wx, wy);
-}
-
-function toPoint(x, y, name) {
-  return { x: x, y: y }
 }
 
 async function setBackendAndEnvFlags(flagConfig, backend) {

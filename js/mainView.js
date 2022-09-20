@@ -1,6 +1,8 @@
 class MainView {
 	constructor() {
+		this.bodyParts = [9,10]; //left hand and right hand
 		this.topParent = document.getElementById("main");
+		
 		this.label = document.getElementById("coords");
 		this.label2 = document.getElementById("pos");
 		this.button1 = document.getElementById("btSkeleton");
