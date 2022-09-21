@@ -2,9 +2,8 @@ class MainView {
 	constructor(params = {}) {
 		this.bodyParts = [9,10]; //left hand and right hand
 		this.params = params;
-		this.topParent = document.createElement('div');
-		//this.topParent.id = "main";
-		this.topParent.className = "interface padding";
+		this.page = document.createElement('div');
+		this.page.className = "interface padding";
 
 		var btn1 = document.createElement("BUTTON");
 		btn1.id = "btSkeleton";
@@ -12,13 +11,12 @@ class MainView {
 		btn1.className = "touchable";
 		btn1.addEventListener("click", () => {
 			DRAW_SKELETON = !DRAW_SKELETON;
-			//interfaz.currentView = new playGround();
 			if (DRAW_SKELETON)
 				btn1.innerHTML = "Esqueleto ON";
 			else
 				btn1.innerHTML = "Esqueleto OFF";
 		});
-		this.topParent.appendChild(btn1);
+		this.page.appendChild(btn1);
 		
 		var btn2 = document.createElement("BUTTON");
 		btn2.id = "btCursor";
@@ -31,7 +29,7 @@ class MainView {
 			else
 				btn2.innerHTML = "Cursor OFF";
 		});
-		this.topParent.appendChild(btn2);
+		this.page.appendChild(btn2);
 		
 		var btn3 = document.createElement("BUTTON");
 		btn3.id = "btBackground";
@@ -43,7 +41,15 @@ class MainView {
 			else
 				btn3.innerHTML = "Fondo OFF";
 		});
-		this.topParent.appendChild(btn3);
+		this.page.appendChild(btn3);
+		var btn4 = document.createElement("BUTTON");
+		btn4.id = "btNEXT";
+		btn4.className = "touchable";
+		btn4.innerHTML = "NEXT";
+		btn4.addEventListener("click", () => {
+			interfaz.pushView("PlayGround", true);
+		});
+		this.page.appendChild(btn4);
 	}
 	
 	iteration(item){

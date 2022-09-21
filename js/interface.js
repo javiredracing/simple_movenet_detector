@@ -1,11 +1,13 @@
 const CLICK_TIME = 1500;
 //https://gist.github.com/tomhodgins/7da3271bd770614e5f1e  simple swipe detector
+//animations https://github.com/codrops/PageTransitions
 class Interface {
 	constructor() {
 	  this.interfaceDiv = document.getElementById("iface");
 	  this.lastItems = [];
 	  this.stackViews = [];
 	  this.currentView = new MainView();
+	  this.newView;
 	}
 
 	manageCoords(poses){
@@ -56,33 +58,72 @@ class Interface {
 	pushView(className, animated = false, params = {}){
 		if (this.stackViews.length == 0){
 			var newView = new classMap[className](params);
-			this.interfaceDiv.appendChild(newView.topParent);
+			this.interfaceDiv.appendChild(newView.page);
 			this.stackViews.push(className);
 			this.currentView = newView;
 		}else{
 			if (this.stackViews[this.stackViews.length - 1] !== className){
-				var newView = new classMap[className](params);
-				this.interfaceDiv.appendChild(newView.topParent);
-				if (animated){
-					//Start transition from newView to this.currentView
-				}
-				//when finished transition, remove old class class and nodes (this.currentView.topParent)
 				this.stackViews.push(className);
-				this.currentView = newView;
+				this.newView = new classMap[className](params);
+				this.interfaceDiv.appendChild(this.newView.page);
+				if (animated){
+					this.launchAnimation(this.newView.page, this.currentView.page, "pt-page-moveFromRight", "pt-page-moveToLeft");
+					//Start transition from newView to this.currentView
+				}else{
+					this.removeElements(this.currentView.page);
+					this.currentView = this.newView;
+				}
 			}
 		}
 	}
 	
-	popView(animated = false, params = {}){
-		if (this.stackViews.length > 0){
-			let className = this.stackViews.pop();
-			var newView = new classMap[className](params);
-			this.interfaceDiv.appendChild(newView.topParent);
-			if (animated){
-				//Start transition from this.currentViewnewView to newView 
+	animationOut(event){
+		var elem = event.srcElement;
+		elem.removeEventListener("animationend", this.animationOut);
+		interfaz.removeElements(elem);
+		//console.log('Transition OUT ended');
+	}
+	
+	animationIn(event){
+		var elem = event.srcElement;
+		console.log('Transition IN ended');
+		elem.removeEventListener("animationend",this.animationIn);
+		interfaz.currentView = interfaz.newView;
+		for (let i = elem.classList.length - 1; i >= 0; i--) {
+			const className = elem.classList[i];
+			if (className.startsWith('pt-page-')) {
+				elem.classList.remove(className);
+				break;
 			}
-			//when finished transition, remove old class class and nodes (this.currentView.topParent)
-			this.currentView = newView;
+		}
+	}
+	
+	removeElements(node){
+		while (node.firstChild) {    
+			node.removeChild(node.firstChild);
+		}
+		node.remove();
+	}
+	
+	launchAnimation(pageIn, pageOut, classIn, classOut){
+		pageOut.addEventListener('animationend', this.animationOut);
+		pageIn.addEventListener('animationend', this.animationIn);
+		pageOut.classList.add(classOut);
+		pageIn.classList.add(classIn);
+	}
+	
+	popView(animated = false, params = {}){
+		if (this.stackViews.length > 1){
+			this.stackViews.pop();
+			let className = this.stackViews[this.stackViews.length - 1];
+			this.newView = new classMap[className](params);
+			this.interfaceDiv.appendChild(this.newView.page);
+			if (animated){
+				this.launchAnimation(this.newView.page, this.currentView.page, "pt-page-moveFromLeft", "pt-page-moveToRight");
+			}else{
+				this.removeElements(this.currentView.page);
+				this.currentView = this.newView;
+			}
 		}
 	}
 	
