@@ -54,8 +54,8 @@ class Interface {
 	setLabel(label, coords){
 		label.innerHTML = "x:" + coords.x.toFixed() + " y:" + coords.y.toFixed();
 	}
-	
-	pushView(className, animated = false, params = {}){
+
+	pushView(className, animated = false, params = {},animationIn = "pt-page-moveFromRight", animationOut = "pt-page-moveToLeft"){
 		if (this.stackViews.length == 0){
 			var newView = new classMap[className](params);
 			this.interfaceDiv.appendChild(newView.page);
@@ -67,7 +67,7 @@ class Interface {
 				this.newView = new classMap[className](params);
 				this.interfaceDiv.appendChild(this.newView.page);
 				if (animated){
-					this.launchAnimation(this.newView.page, this.currentView.page, "pt-page-moveFromRight", "pt-page-moveToLeft");
+					this.launchAnimation(this.newView.page, this.currentView.page, animationIn, animationOut);
 					//Start transition from newView to this.currentView
 				}else{
 					this.removeElements(this.currentView.page);
@@ -76,17 +76,17 @@ class Interface {
 			}
 		}
 	}
-	
+
 	animationOut(event){
 		var elem = event.srcElement;
 		elem.removeEventListener("animationend", this.animationOut);
 		interfaz.removeElements(elem);
 		//console.log('Transition OUT ended');
 	}
-	
+
 	animationIn(event){
 		var elem = event.srcElement;
-		console.log('Transition IN ended');
+		//console.log('Transition IN ended');
 		elem.removeEventListener("animationend",this.animationIn);
 		interfaz.currentView = interfaz.newView;
 		for (let i = elem.classList.length - 1; i >= 0; i--) {
@@ -97,36 +97,36 @@ class Interface {
 			}
 		}
 	}
-	
+
 	removeElements(node){
-		while (node.firstChild) {    
+		while (node.firstChild) {
 			node.removeChild(node.firstChild);
 		}
 		node.remove();
 	}
-	
+
 	launchAnimation(pageIn, pageOut, classIn, classOut){
 		pageOut.addEventListener('animationend', this.animationOut);
 		pageIn.addEventListener('animationend', this.animationIn);
 		pageOut.classList.add(classOut);
 		pageIn.classList.add(classIn);
 	}
-	
-	popView(animated = false, params = {}){
+
+	popView(animated = false, params = {}, animationIn = "pt-page-moveFromLeft", animationOut ="pt-page-moveToRight"){
 		if (this.stackViews.length > 1){
 			this.stackViews.pop();
 			let className = this.stackViews[this.stackViews.length - 1];
 			this.newView = new classMap[className](params);
 			this.interfaceDiv.appendChild(this.newView.page);
 			if (animated){
-				this.launchAnimation(this.newView.page, this.currentView.page, "pt-page-moveFromLeft", "pt-page-moveToRight");
+				this.launchAnimation(this.newView.page, this.currentView.page, animationIn, animationOut);
 			}else{
 				this.removeElements(this.currentView.page);
 				this.currentView = this.newView;
 			}
 		}
 	}
-	
+
 	validateKeyPoint(keypoint){
 		if (typeof keypoint !== 'undefined'){
 			const score = keypoint.score != null ? keypoint.score : 1;
@@ -139,7 +139,7 @@ class Interface {
 		}
 		return "";
 	}
-	
+
 	toScreenCoords(coord) {
 		let rect = camera.canvas.getBoundingClientRect();
 		let traslationX = rect.width / camera.canvas.width;
@@ -149,7 +149,7 @@ class Interface {
 
 		return this.toPoint(wx, wy);
 	}
-	
+
 	toPoint(x, y) {
 		return { x: x, y: y }
 	}
