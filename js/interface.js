@@ -100,7 +100,7 @@ class Interface {
 
 	removeElements(node){
 		while (node.firstChild) {
-			node.removeChild(node.firstChild);
+			node.removeChild(node.lastChild);
 		}
 		node.remove();
 	}
